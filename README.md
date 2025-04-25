@@ -1,7 +1,5 @@
 # Projeto Final Parte 2 - Banco Digital(API)
 
-*Não é necessário o envio da solução deste exercício
-**Não é necessário a criação do fluxograma
 ***Prazo de 2 a 3 semanas
 
 ## Como rodar o projeto
