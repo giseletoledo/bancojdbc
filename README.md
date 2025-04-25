@@ -5,10 +5,8 @@
 ***Prazo de 2 a 3 semanas
 
 ## Como rodar o projeto
-bash
-Copiar
-Editar
-## Clone o repositório
+
+**Clone o repositório**
 git clone https://github.com/seu-usuario/banco-digital-jdbc.git
 
 ## Importe como projeto Maven no Eclipse/IntelliJ
