@@ -18,10 +18,7 @@ sql
 -- clientes, enderecos, contas, transacoes, cartoes, cartao_transacoes
 As tabelas são criadas automaticamente ao iniciar o sistema.
 
-
-
-
-A partir da descrição do projeto anterior, crie uma API para Banco Digital com os
+API para Banco Digital, criada a partir de um projeto somente com Java e foi adicionado o banco de dados com os
 seguintes endpoints:
 ### Endpoints da API Banco Digital
 #### Cliente
