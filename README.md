@@ -39,6 +39,7 @@ seguintes endpoints:
 - **PUT /contas/{id}/manutencao** - Aplicar taxa de manutenção mensal (para conta
 corrente)
 - **PUT /contas/{id}/rendimentos** - Aplicar rendimentos (para conta poupança)
+- **DELETE /contas/{id}** - Remover um conta (não tinha feito com deleção lógica)
 
 
 #### Cartão
@@ -52,3 +53,4 @@ corrente)
 - **POST /cartoes/{id}/fatura/pagamento** - Realizar pagamento da fatura do cartão
 de crédito
 - **PUT /cartoes/{id}/limite-diario** - Alterar limite diário do cartão de débito
+- **DELETE /cartoes/{id}** - Remover um cartão com deleção lógica
