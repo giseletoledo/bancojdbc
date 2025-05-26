@@ -2,6 +2,7 @@ package br.com.bancodigitaljdbc.controller;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.List;
 
 import br.com.bancodigitaljdbc.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,19 @@ public class ContaController {
     @GetMapping("/{id}/saldo")
     public ResponseEntity<BigDecimal> consultarSaldo(@PathVariable Long id) throws SQLException {
         return ResponseEntity.ok(contaService.consultarSaldo(id));
+    }
+
+    @GetMapping("/cliente/{clienteId}")
+    public ResponseEntity<List<ContaDTO>> listarContasDoCliente(
+            @PathVariable Long clienteId) throws SQLException {
+
+        List<ContaDTO> contas = contaService.buscarContasPorClienteId(clienteId);
+
+        if (contas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(contas);
     }
     
     // GET /contas/{id}/extrato - Gerar extrato da conta
