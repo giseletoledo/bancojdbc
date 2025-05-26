@@ -1,8 +1,6 @@
 package br.com.bancodigitaljdbc.controller;
 
-import br.com.bancodigitaljdbc.dao.ClienteDAO;
 import br.com.bancodigitaljdbc.dto.ClienteDTO;
-import br.com.bancodigitaljdbc.model.Cliente;
 import br.com.bancodigitaljdbc.service.ClienteService;
 
 
@@ -67,7 +65,6 @@ public class ClienteController {
             return "Dados inválidos: " + e.getMessage();
         }
     }
-
 
     // Deletar cliente (DELETE)
     @DeleteMapping("/{id}")

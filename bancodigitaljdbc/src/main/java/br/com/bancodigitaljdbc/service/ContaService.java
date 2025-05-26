@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.List;
 
+import br.com.bancodigitaljdbc.dto.AtualizacaoContaDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -117,5 +118,19 @@ public class ContaService {
     public String gerarExtrato(Long id) throws SQLException {
         Conta conta = contaDAO.buscarContaPorId(id);
         return conta.gerarExtrato();
+    }
+
+    public void deletarConta(Long id) throws SQLException {
+        Conta conta = contaDAO.buscarContaPorId(id); // Verifica se a conta existe
+        contaDAO.deletarConta(id);
+    }
+
+    public void atualizarConta(Long id, AtualizacaoContaDTO dto) throws SQLException {
+        Conta conta = contaDAO.buscarContaPorId(id); // valida existência
+        if (dto.tipoConta() != null) conta.setTipoConta(dto.tipoConta());
+        if (dto.chavePix() != null) conta.setChavePix(dto.chavePix());
+        if (dto.limiteEspecial() != null) conta.setLimiteEspecial(dto.limiteEspecial());
+
+        contaDAO.atualizarDadosConta(conta);
     }
 }

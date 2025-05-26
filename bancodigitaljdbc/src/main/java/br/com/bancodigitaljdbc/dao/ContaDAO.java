@@ -114,6 +114,22 @@ public class ContaDAO {
         }
     }
 
+    public void atualizarDadosConta(Conta conta) throws SQLException {
+        String sql = "UPDATE contas SET tipo_conta = ?, chave_pix = ?, limite_especial = ? WHERE id = ?";
+
+        try (Connection connection = DatabaseConfig.conectar();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setString(1, conta.getTipoConta());
+            stmt.setString(2, conta.getChavePix());
+            stmt.setBigDecimal(3, conta.getLimiteEspecial());
+            stmt.setLong(4, conta.getId());
+
+            stmt.executeUpdate();
+        }
+    }
+
+
     private void salvarTransacao(Connection connection, Transacao t, Long contaId) throws SQLException {
         String sql = "INSERT INTO transacoes (conta_id, valor, tipo_transacao, descricao) VALUES (?, ?, ?, ?)";
 
@@ -156,4 +172,17 @@ public class ContaDAO {
         return transacoes;
     }
 
+    public void deletarConta(Long id) throws SQLException {
+        String sql = "DELETE FROM contas WHERE id = ?";
+
+        try (Connection connection = DatabaseConfig.conectar();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setLong(1, id);
+            int rowsAffected = stmt.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new IllegalArgumentException("Conta não encontrada para exclusão.");
+            }
+        }
+    }
 }

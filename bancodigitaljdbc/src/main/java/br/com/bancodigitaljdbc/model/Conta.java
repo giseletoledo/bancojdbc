@@ -71,6 +71,10 @@ public class Conta {
     public String getTipoConta() { return tipoConta; }
     public List<Transacao> getTransacoes() { return transacoes; }
 
+    public void setTipoConta(String tipoConta) {
+        this.tipoConta = tipoConta;
+    }
+
     public void setChavePix(String chavePix) {
         this.chavePix = chavePix;
     }
@@ -176,5 +180,5 @@ public class Conta {
 
         return sb.toString();
     }
-    
+
 }

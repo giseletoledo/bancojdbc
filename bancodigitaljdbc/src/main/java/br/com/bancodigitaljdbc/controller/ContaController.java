@@ -3,22 +3,12 @@ package br.com.bancodigitaljdbc.controller;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 
+import br.com.bancodigitaljdbc.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.bancodigitaljdbc.dto.ContaDTO;
-import br.com.bancodigitaljdbc.dto.DepositoDTO;
-import br.com.bancodigitaljdbc.dto.TransferenciaDTO;
-import br.com.bancodigitaljdbc.dto.ValorRequest;
 import br.com.bancodigitaljdbc.service.ContaService;
 
 @RestController
@@ -47,13 +37,12 @@ public class ContaController {
         return ResponseEntity.ok(contaService.consultarSaldo(id));
     }
     
- // GET /contas/{id}/extrato - Gerar extrato da conta
+    // GET /contas/{id}/extrato - Gerar extrato da conta
     @GetMapping("/{id}/extrato")
     public ResponseEntity<String> gerarExtrato(@PathVariable Long id) throws SQLException {
         String extrato = contaService.gerarExtrato(id);
         return ResponseEntity.ok(extrato);
     }
-    
 
     @GetMapping("/clientes/{id}/extratos")
     public ResponseEntity<String> extratosCliente(@PathVariable Long id) throws SQLException {
@@ -61,12 +50,12 @@ public class ContaController {
         return ResponseEntity.ok(extratos);
     }
 
+    // POST /contas/{id}/deposito
     @PostMapping("/{id}/deposito")
     public ResponseEntity<Void> depositar(@PathVariable Long id, @RequestBody DepositoDTO request) throws SQLException {
         contaService.depositar(id, request.valor());
         return ResponseEntity.ok().build();
     }
-
 
     // POST /contas/{id}/saque - Realizar saque
     @PostMapping("/{id}/saque")
@@ -74,7 +63,6 @@ public class ContaController {
         contaService.sacar(id, request.valor());
         return ResponseEntity.ok().build();
     }
-
 
     // POST /contas/{id}/transferencia - Transferência para outra conta
     @PostMapping("/{id}/transferencia")
@@ -90,6 +78,12 @@ public class ContaController {
         return ResponseEntity.ok().build();
     }
 
+    // PUT /contas/{id} - Atualizar dados da conta
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizarConta(@PathVariable Long id, @RequestBody AtualizacaoContaDTO dto) throws SQLException {
+        contaService.atualizarConta(id, dto);
+        return ResponseEntity.ok().build();
+    }
 
     // PUT /contas/{id}/manutencao - Aplicar taxa de manutenção
     @PutMapping("/{id}/manutencao")
@@ -104,4 +98,12 @@ public class ContaController {
         contaService.aplicarRendimento(id);
         return ResponseEntity.ok().build();
     }
+
+    // DELETE /contas/{id} - Deletar conta
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarConta(@PathVariable Long id) throws SQLException {
+        contaService.deletarConta(id);
+        return ResponseEntity.noContent().build(); // 204
+    }
+
 }
