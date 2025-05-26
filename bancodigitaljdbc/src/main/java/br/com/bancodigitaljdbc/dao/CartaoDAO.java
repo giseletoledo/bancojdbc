@@ -216,4 +216,26 @@ public class CartaoDAO {
         }
     }
 
+    public void atualizarCartao(Cartao cartao) throws SQLException {
+        String sql = """
+        UPDATE cartoes
+        SET limite = ?, limite_diario = ?, senha = ?, ativo = ?
+        WHERE id = ?
+    """;
+
+        try (Connection connection = DatabaseConfig.conectar();
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+
+            stmt.setBigDecimal(1, cartao.getLimite());
+            stmt.setBigDecimal(2, cartao.getLimiteDiario());
+            stmt.setString(3, cartao.getSenha());
+            stmt.setBoolean(4, cartao.isAtivo());
+            stmt.setLong(5, cartao.getId());
+
+            int linhasAfetadas = stmt.executeUpdate();
+            if (linhasAfetadas == 0) {
+                throw new IllegalArgumentException("Cartão não encontrado para atualização.");
+            }
+        }
+    }
 }

@@ -5,13 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import br.com.bancodigitaljdbc.dto.CartaoAtualizacaoDTO;
 import br.com.bancodigitaljdbc.dto.CartaoDTO;
@@ -43,6 +37,16 @@ public class CartaoController {
     public ResponseEntity<Cartao> buscarCartao(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(cartaoService.buscarCartao(id));
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // GET /cartoes/{id}/fatura - Consulta de fatura (simplificado)
+    @GetMapping("/{id}/fatura")
+    public ResponseEntity<List<CartaoTransacao>> consultarFatura(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(cartaoService.consultarFatura(id));
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
@@ -103,11 +107,23 @@ public class CartaoController {
         }
     }
 
-    // GET /cartoes/{id}/fatura - Consulta de fatura (simplificado)
-    @GetMapping("/{id}/fatura")
-    public ResponseEntity<List<CartaoTransacao>> consultarFatura(@PathVariable Long id) {
+    // PUT /cartoes/{id} - Atualizar dados do cartão (ex: tipoCartao, senha, limite, etc.)
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizarCartao(@PathVariable Long id, @RequestBody CartaoDTO dto) {
         try {
-            return ResponseEntity.ok(cartaoService.consultarFatura(id));
+            cartaoService.atualizarCartao(id, dto);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    // DELETE /cartoes/{id} - Deletar cartão
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarCartao(@PathVariable Long id) {
+        try {
+            cartaoService.deletarCartao(id);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }

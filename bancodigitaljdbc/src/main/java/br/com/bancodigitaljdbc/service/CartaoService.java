@@ -93,4 +93,31 @@ public class CartaoService {
         }
         return sb.toString();
     }
+
+    public void atualizarCartao(Long id, CartaoDTO dto) throws SQLException {
+        Cartao cartaoExistente = cartaoDAO.buscarCartaoPorId(id);
+        if (cartaoExistente == null) {
+            throw new IllegalArgumentException("Cartão não encontrado.");
+        }
+
+        // Atualiza campos que forem necessários (exemplo)
+        cartaoExistente.setSenha(dto.senha());
+        cartaoExistente.setTipoCartao(dto.tipoCartao());
+        cartaoExistente.setLimite(dto.limite());
+
+        if (dto.tipoCartao() == TipoCartao.DEBITO && dto.limiteDiario() != null) {
+            cartaoExistente.setLimiteDiario(dto.limiteDiario());
+        }
+
+        cartaoDAO.atualizarCartao(cartaoExistente);
+    }
+
+    public void deletarCartao(Long id) throws SQLException {
+        Cartao cartao = cartaoDAO.buscarCartaoPorId(id);
+        if (cartao == null) {
+            throw new IllegalArgumentException("Cartão não encontrado.");
+        }
+
+        cartaoDAO.atualizarStatus(id, false); // Exclusão lógica
+    }
 }
