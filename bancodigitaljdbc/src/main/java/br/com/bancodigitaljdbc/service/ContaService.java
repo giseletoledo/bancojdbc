@@ -2,6 +2,7 @@ package br.com.bancodigitaljdbc.service;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.bancodigitaljdbc.dto.AtualizacaoContaDTO;
@@ -132,5 +133,16 @@ public class ContaService {
         if (dto.limiteEspecial() != null) conta.setLimiteEspecial(dto.limiteEspecial());
 
         contaDAO.atualizarDadosConta(conta);
+    }
+
+    public List<ContaDTO> buscarContasPorClienteId(Long clienteId) throws SQLException {
+        List<Conta> contas = contaDAO.buscarContasPorClienteId(clienteId);
+        List<ContaDTO> contasDTO = new ArrayList<>();
+
+        for (Conta conta : contas) {
+            contasDTO.add(ContaMapper.toDTO(conta));
+        }
+
+        return contasDTO;
     }
 }
