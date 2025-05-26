@@ -4,6 +4,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import br.com.bancodigitaljdbc.config.DatabaseConfig;
@@ -15,6 +17,8 @@ import br.com.bancodigitaljdbc.model.Transacao;
 
 @Repository
 public class ContaDAO {
+
+    private static final Logger logger = LoggerFactory.getLogger(ContaDAO.class);
 
     public void criarConta(Conta conta) throws SQLException {
         String sql = "INSERT INTO contas (cliente_id, saldo, tipo_conta, chave_pix, numero_conta, limite_especial) VALUES (?, ?, ?, ?, ?, ?)";
@@ -55,8 +59,7 @@ public class ContaDAO {
 
         throw new IllegalArgumentException("Conta não encontrada.");
     }
-    
-    
+
     public List<Conta> buscarContasPorClienteId(Long clienteId) throws SQLException {
         List<Conta> contas = new ArrayList<>();
 
@@ -76,8 +79,6 @@ public class ContaDAO {
 
         return contas;
     }
-
-    
 
     public Conta buscarContaPorChavePix(String chavePix) throws SQLException {
         String sql = "SELECT * FROM contas WHERE chave_pix = ?";
@@ -132,13 +133,22 @@ public class ContaDAO {
 
     private void salvarTransacao(Connection connection, Transacao t, Long contaId) throws SQLException {
         String sql = "INSERT INTO transacoes (conta_id, valor, tipo_transacao, descricao) VALUES (?, ?, ?, ?)";
+        logger.trace("Salvando transação para conta ID: {}", contaId);
 
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, contaId);
             stmt.setBigDecimal(2, t.getValor());
             stmt.setString(3, t.getTipo().name());
             stmt.setString(4, t.getDescricao());
             stmt.executeUpdate();
+
+            // Recupera o ID gerado
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    t.setId(generatedKeys.getLong(1));
+                    logger.debug("Transação salva com ID: {}", t.getId());
+                }
+            }
         }
     }
 
@@ -157,6 +167,9 @@ public class ContaDAO {
                         rs.getBigDecimal("valor"),
                         TipoTransacao.valueOf(rs.getString("tipo_transacao"))
                     );
+
+                    // Impedir o ID nulo
+                    //transacao.setId(rs.getLong("id"));
 
                     // Se sua classe Transacao tem setData(LocalDateTime), define a data da transação
                     Timestamp data = rs.getTimestamp("data_transacao");
